@@ -2,10 +2,6 @@
 /.env
 /act.sh
 /src
-/static
-/site_media
-/base.sqlite
-/settings*
 *.pyc
 /.project
 /.pydevproject
