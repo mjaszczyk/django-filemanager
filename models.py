@@ -6,6 +6,7 @@ import os
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.contrib.auth.models import User
 
 from .settings import ICONS_PATH_FORMAT_STR, AVAILABLE_ICONS, IMAGE_ICON_NAME, IMAGE_ICONS
@@ -28,7 +29,22 @@ class FileCategory(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class StaticFileQueryset(models.query.QuerySet):
+    def images(self):
+        return self.filter(
+            reduce(lambda x, y: x | Q(filename__iendswith=y), StaticFile.IMAGE_EXTENSIONS, Q()))
+
+class StaticFileManager(models.Manager):
+    def get_query_set(self):
+        return StaticFileQueryset(self.model, using=self._db)
+
+    def images(self):
+        return self.all().images()
+
 class StaticFile(models.Model):
+    IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png', 'bmp']
+
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User)
@@ -38,7 +54,9 @@ class StaticFile(models.Model):
                                 help_text=u'Przy dodawaniu pliku nazwa zapisze się samoczynnie')
     description = models.CharField(u'Krótki opis', max_length=200,
                                    help_text=u'Wyświetlany w nazwie linka')
-    
+   
+    objects = StaticFileManager()
+
     class Meta:
         verbose_name = u"Plik"
         verbose_name_plural = u"Pliki"

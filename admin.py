@@ -3,10 +3,17 @@
 from __future__ import absolute_import
 
 from django.contrib import admin
+from django.core.exceptions import PermissionDenied
+from django.conf.urls.defaults import patterns, url
+from django.conf import settings
 
 from .models import StaticFile, FileCategory
+from seautils.baseadmin.admin import BaseModelAdmin
 
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(BaseModelAdmin):
+    class Media:
+        js = [settings.STATIC_URL + 'filemanager/js/admin_list.js']
+
     date_hierarchy = ('create_time')
     list_display = ('static_file', 'category', 'create_time', 'file_ext')
     list_display_links = ('static_file', 'create_time', )
@@ -15,6 +22,11 @@ class FileAdmin(admin.ModelAdmin):
     
     exclude = ('author',)
      
+    def select_button(self, obj):
+        return """<button ref="%d" name="%s" addr="%s" class="insert-button">Wstaw </button>""" \
+                    % (obj.id, obj.filename, obj.static_file.url)
+    select_button.allow_tags = True
+
     def save_form(self, request, form, change):
         obj = super( FileAdmin, self).save_form(request, form, change)
         if 'file' in request.FILES:
@@ -23,6 +35,27 @@ class FileAdmin(admin.ModelAdmin):
         if not change:
             obj.author = request.user
         return obj
+
+    def get_urls(self):
+        urls = super(FileAdmin, self).get_urls()
+        urls = patterns('',
+            (r'^popuplist/(?P<media_type>\w+)/$', self.popup_list_view),
+        ) + urls
+        return urls
+
+    def popup_list_view(self, request, media_type, extra_context=None):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+        
+        def queryset_modifier(queryset):
+            if media_type == 'image':
+                queryset = queryset.images()
+            return queryset
+        
+        list_display = ['select_button'] + list(self.list_display)
+        return self.simple_list_view(request, extra_context, list_display=list_display, 
+                                     template_path=self.change_list_template, 
+                                     queryset_modifier=queryset_modifier)
     
 class FileCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', )

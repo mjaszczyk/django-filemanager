@@ -1,0 +1,13 @@
+<style>
+    .image-preview { margin: 10px; border: 3px #ddd solid; float: left; }
+    #add_id_photo {display: none;}
+</style>
+<input {{flat_attrs|safe}} value="{{ value }}" />
+
+<p class="{{ what }}-name">{{ media.name }}</p>
+<img src="{{ media }}" class="{{ what }}-preview" {% if not media %}style="display: none;"{% endif %} />
+<a href="#" class="remove-{{ what }}" {% if not media %}style="display: none;"{% endif %}>
+    <img src="{{ STATIC_URL }}filemanager/img/delete.gif"  />
+</a>
+<a href="#" class="input-insert-{{ what }}" ref="{{final_attrs.id}}">
+<img src="{{ STATIC_URL }}filemanager/img/selector-search.gif" width="16" height="16" alt="Szukaj"></a>

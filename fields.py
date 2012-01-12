@@ -14,7 +14,7 @@ from .models import StaticFile
 
 class ImageWidget(Widget):
     class Media:
-        js = (settings.STATIC_URL + 'media/js/media_fields.js', )
+        js = (settings.STATIC_URL + 'filemanager/js/image_field.js', )
             
     def render(self, name, value, attrs=None):
         if value == None: 
@@ -36,6 +36,7 @@ class ImageWidget(Widget):
             'final_attrs': final_attrs,
             'flat_attrs': flatatt(final_attrs),
             'media': media, 
+            'what': 'image',
             'STATIC_URL': settings.STATIC_URL
         })
         
