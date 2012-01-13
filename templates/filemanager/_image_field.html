@@ -5,7 +5,7 @@
 <input {{flat_attrs|safe}} value="{{ value }}" />
 
 <p class="{{ what }}-name">{{ media.name }}</p>
-<img src="{{ media }}" class="{{ what }}-preview" {% if not media %}style="display: none;"{% endif %} />
+<img src="{{ media.static_file.url }}" class="{{ what }}-preview" width="150" {% if not media %}style="display: none;"{% endif %} />
 <a href="#" class="remove-{{ what }}" {% if not media %}style="display: none;"{% endif %}>
     <img src="{{ STATIC_URL }}filemanager/img/delete.gif"  />
 </a>
