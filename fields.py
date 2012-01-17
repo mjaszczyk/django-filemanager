@@ -68,10 +68,13 @@ class ImageField(ForeignKey):
         defaults.update(kwargs)
         return super(ImageField, self).formfield(**defaults)
 
+class ImageVideoField(ImageField):
+    pass
+
 # zasady zdefiniowane dla southa
 rules = [
   (
-    (ImageField,),
+    (ImageField, ImageVideoField),
     [],
     {
         "to": ["rel.to", {}],
