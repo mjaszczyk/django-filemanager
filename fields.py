@@ -15,11 +15,11 @@ from .models import StaticFile
 class ImageWidget(Widget):
     class Media:
         js = (settings.STATIC_URL + 'filemanager/js/image_field.js', )
-            
+
     def render(self, name, value, attrs=None):
-        if value == None: 
+        if value == None:
             value = ''
-        
+
         final_attrs = self.build_attrs(attrs, name=name)
         final_attrs['type'] = 'hidden'
 
@@ -30,16 +30,16 @@ class ImageWidget(Widget):
             media = None
         except ValueError:
             media = None
-            
+
         return render_to_string('filemanager/_image_field.html', {
-            'value': value, 
+            'value': value,
             'final_attrs': final_attrs,
             'flat_attrs': flatatt(final_attrs),
-            'media': media, 
+            'media': media,
             'what': 'image',
             'STATIC_URL': settings.STATIC_URL
         })
-        
+
 class ImageFormField(ModelChoiceField):
     """
     Pole formowe uzywane dla pola ImageField
@@ -81,4 +81,4 @@ rules = [
     },
   )
 ]
-add_introspection_rules(rules, ["^apps\.filemanager\.fields\.ImageField"])
+add_introspection_rules(rules, ["^filemanager\.fields\.ImageField"])
