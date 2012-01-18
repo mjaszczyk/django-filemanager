@@ -1,15 +1,5 @@
 window.init_plupload = (url, success_url) ->
     $ ->
-        $('form').submit (e) ->
-            uploader = $('#uploader').pluploadQueue()
-
-            if (uploader.files.length > 0)
-                uploader.bind('StateChanged', ->
-                    if (uploader.files.length == (uploader.total.uploaded + uploader.total.failed))
-                        $('form')[0].submit()
-                )
-                uploader.start()
-
         uploader = new plupload.Uploader
             browse_button : 'pickfiles',
             container : 'upload-container',
@@ -48,3 +38,12 @@ window.init_plupload = (url, success_url) ->
 
         uploader.bind 'FileUploaded', (up, file) ->
             $('#' + file.id + " b").html("100%")
+
+        $('form').submit (e) ->
+            if (uploader.files.length > 0)
+                uploader.bind('StateChanged', ->
+                    if (uploader.files.length == (uploader.total.uploaded + uploader.total.failed))
+                        $('form')[0].submit()
+                )
+                uploader.start()
+
