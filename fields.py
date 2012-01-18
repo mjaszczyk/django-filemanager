@@ -10,11 +10,19 @@ from django.forms.util import flatatt
 from django.conf import settings
 
 from south.modelsinspector import add_introspection_rules
+
 from .models import StaticFile
+from seautils.utils import compile_js
 
 class ImageWidget(Widget):
+    DEFAULT_POPUP_ADDR = '/filemanager/staticfile/popuplist/image/'
+
     class Media:
-        js = (settings.STATIC_URL + 'filemanager/js/image_field.js', )
+        js = compile_js(['filemanager/js/image_field.coffee', ])
+
+    def __init__(self, *args, **kwargs):
+        self.popup_addr = kwargs.pop('popup_addr', self.DEFAULT_POPUP_ADDR)
+        super(ImageWidget, self).__init__(*args, **kwargs)
             
     def render(self, name, value, attrs=None):
         if value == None: 
@@ -37,7 +45,8 @@ class ImageWidget(Widget):
             'flat_attrs': flatatt(final_attrs),
             'media': media, 
             'what': 'image',
-            'STATIC_URL': settings.STATIC_URL
+            'STATIC_URL': settings.STATIC_URL,
+            'popup_addr': self.popup_addr
         })
         
 class ImageFormField(ModelChoiceField):

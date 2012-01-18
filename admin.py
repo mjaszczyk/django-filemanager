@@ -9,10 +9,11 @@ from django.conf import settings
 
 from .models import StaticFile, FileCategory
 from seautils.baseadmin.admin import BaseModelAdmin
+from seautils.utils import compile_js
 
 class FileAdmin(BaseModelAdmin):
     class Media:
-        js = [settings.STATIC_URL + 'filemanager/js/admin_list.js']
+        js = compile_js(['filemanager/js/admin_list.js'])
 
     date_hierarchy = ('create_time')
     list_display = ('static_file', 'category', 'create_time', 'file_ext')

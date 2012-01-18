@@ -2,6 +2,9 @@
     .image-preview { margin: 10px; border: 3px #ddd solid; float: left; }
     #add_id_photo {display: none;}
 </style>
+<script type="text/javascript">
+    var POPUP_ADDR = '{{ popup_addr }}';
+</script>
 <input {{flat_attrs|safe}} value="{{ value }}" />
 
 <p class="{{ what }}-name">{{ media.name }}</p>

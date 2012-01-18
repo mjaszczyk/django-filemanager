@@ -31,7 +31,9 @@ removeClicked = (e) ->
 	$(this).fadeOut(100)
 
 insertClicked = (evt) ->
-    href = '/filemanager/staticfile/popuplist/image/'
+    href = POPUP_ADDR
+    if REPLACE_IN_POPUP_ADDR
+        href = href.replace "??", REPLACE_IN_POPUP_ADDR
     
     FBWindow = window.open(href,
         String("Obrazy"),
