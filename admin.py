@@ -16,13 +16,18 @@ class FileAdmin(BaseModelAdmin):
         js = compile_js(['filemanager/js/admin_list.js'])
 
     date_hierarchy = ('create_time')
-    list_display = ('static_file', 'category', 'create_time', 'file_ext')
+    list_display = ('icon', 'static_file', 'category', 'create_time', 'file_ext')
     list_display_links = ('static_file', 'create_time', )
     list_filter = ('category',)
     search_fields = ('filename', 'description')
     
     exclude = ('author',)
      
+    def icon(self, obj):
+        return '<img src="%s" />' % obj.icon_path()
+    icon.short_description = u'Ikona'
+    icon.allow_tags = True
+
     def select_button(self, obj):
         return """<button ref="%d" name="%s" addr="%s" class="insert-button">Wstaw </button>""" \
                     % (obj.id, obj.filename, obj.static_file.url)
@@ -30,12 +35,13 @@ class FileAdmin(BaseModelAdmin):
 
     def save_form(self, request, form, change):
         obj = super( FileAdmin, self).save_form(request, form, change)
-        if 'file' in request.FILES:
-            obj.filename = request.FILES['file'].name
+        if 'static_file' in request.FILES:
+            obj.filename = request.FILES['static_file'].name
         
         if not change:
             obj.author = request.user
         return obj
+        obj.save()
 
     def get_urls(self):
         urls = super(FileAdmin, self).get_urls()
