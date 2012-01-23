@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.dispatch.dispatcher import Signal
 from django.core.urlresolvers import reverse
 
-from apps.filemanager.models import FileCategory
+from .models import FileCategory
 from .forms import StaticFileForm
 
 file_uploaded = Signal(providing_args=["signal_key", "static_file_instance"])
