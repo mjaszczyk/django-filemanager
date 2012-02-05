@@ -8,3 +8,4 @@
 /.settings
 .sass-cache
 /*.nja
+*.egg-info

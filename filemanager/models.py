@@ -3,6 +3,8 @@
 from __future__ import absolute_import
 
 import os
+import base64
+import mimetypes
 
 from django.conf import settings
 from django.db import models
@@ -71,6 +73,11 @@ class StaticFile(models.Model):
     def url(self):
         return self.static_file.storage.url(str(self.static_file))
 
+    def as_base64(self):
+        with open(self.file_path, "rb") as f:
+            encoded_string = base64.b64encode(f.read())
+        return 'data:%s;base64,%s' % (mimetypes.guess_type(self.file_path)[0], encoded_string)
+
     def icon_path(self):
         ext = self.file_ext()
         if ext in AVAILABLE_ICONS:
@@ -81,11 +88,13 @@ class StaticFile(models.Model):
             return ''
 
     def size(self):
-        file_path = '%s/%s' \
-             % (settings.MEDIA_ROOT, self.static_file.name.split("/")[-1])
-        if os.path.exists(file_path):
-            return "%0.1f KB" % (os.path.getsize(file_path)/(1024.0))
+        if os.path.exists(self.file_path):
+            return "%0.1f KB" % (os.path.getsize(self.file_path)/(1024.0))
         return "0 MB"
+
+    @property
+    def file_path(self):
+        return '%s/%s' % (settings.MEDIA_ROOT, self.static_file.name.split("/")[-1])
     
     def __unicode__(self):
         return "%s - %s" % (unicode(self.static_file), self.filename)
