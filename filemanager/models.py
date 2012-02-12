@@ -49,7 +49,7 @@ class StaticFile(models.Model):
 
     create_time = models.DateTimeField(auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, null=True, blank=True)
     category = models.ForeignKey(FileCategory, verbose_name=u"Kategoria pliku", null=True)
     static_file = models.FileField(u"Plik", upload_to=generate_file_path)
     filename = models.CharField(u'Oryginalna nazwa pliku', max_length=100, blank=True,
