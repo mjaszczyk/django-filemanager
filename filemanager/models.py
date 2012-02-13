@@ -9,7 +9,10 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from PIL import Image
+
 from .settings import ICONS_PATH_FORMAT_STR, AVAILABLE_ICONS, IMAGE_ICON_NAME, IMAGE_ICONS
+
 
 def generate_file_path(instance, filename):
     filename_dict = {'filename': filename}
@@ -45,7 +48,7 @@ class StaticFileManager(models.Manager):
 class StaticFile(models.Model):
     IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'gif', 'png', 'bmp']
 
-    create_time = models.DateTimeField(auto_now_add=True)
+    create_time = models.DateTimeField(u'stworzony', auto_now_add=True)
     update_time = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User)
     category = models.ForeignKey(FileCategory, verbose_name=u"Kategoria pliku", null=True)
@@ -76,6 +79,7 @@ class StaticFile(models.Model):
         if ext in AVAILABLE_ICONS:
             return ICONS_PATH_FORMAT_STR % ext
         elif ext in IMAGE_ICONS:
+            return self.url()
             return ICONS_PATH_FORMAT_STR % IMAGE_ICON_NAME
         else:
             return ''
@@ -89,3 +93,11 @@ class StaticFile(models.Model):
     
     def __unicode__(self):
         return "%s - %s" % (unicode(self.static_file), self.filename)
+
+    def resized_content(self):
+        _filter = getattr(Image, self.resize_args['filter'])
+        size = (int(self.resize_args['new_w']), int(self.resize_args['new_h']))
+        img = Image.open(self.image)
+        new_image = img.resize(size, _filter)
+        new_name = self.storage.get_available_name(self.args['file'])
+        new_image.save(self.storage.path(new_name))

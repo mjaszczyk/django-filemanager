@@ -2,13 +2,19 @@
 
 from __future__ import absolute_import
 
+import mimetypes
+
+from django.http import Http404
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.dispatch.dispatcher import Signal
 from django.core.urlresolvers import reverse
 
-from .models import FileCategory
+from .models import FileCategory, StaticFile
 from .forms import StaticFileForm
+from .img import ThumbnailBackend
+from .settings import AVAILABLE_SIZES
 
 file_uploaded = Signal(providing_args=["signal_key", "static_file_instance"])
 
@@ -33,3 +39,41 @@ def upload_file(request, signal_key):
             return response
         else:
             return HttpResponseRedirect(reverse('plupload_sample.upload.views.upload_file'))
+
+def serve_img(request, file_id, params):
+    """
+    Params:
+    size_index
+    crop
+    """
+    params_list = params.split(',')
+    try:
+        size_index = int(params_list[0] if params else -1)
+    except ValueError:
+        raise Http404('Invalid params')
+    try:
+        size = AVAILABLE_SIZES[size_index]
+    except IndexError:
+        raise Http404('Invalid size.')
+    
+    crop = None
+    if len(params_list) > 1:
+        crop = params_list[1]
+
+    static_file = get_object_or_404(StaticFile, id=file_id)
+
+    # TODO oryginalny rozmiar
+    tb = ThumbnailBackend()
+    size_str = "%sx%s" % (size[0], size[1]) if size != -1 else ''
+    thumb_args = [static_file.static_file, size_str]
+    thumb_kwargs = {}
+    if crop:
+        thumb_kwargs['crop'] = crop
+    ni = tb.get_thumbnail(*thumb_args, **thumb_kwargs)
+
+    mimetype, encoding = mimetypes.guess_type(static_file.filename)
+    mimetype = mimetype or 'application/octet-stream'
+    response = HttpResponse()
+    ni.save(response, 'JPEG')
+    response['Content-Type'] = '%s; charset=utf-8' % (mimetype)
+    return response

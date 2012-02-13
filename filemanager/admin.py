@@ -24,7 +24,7 @@ class FileAdmin(BaseModelAdmin):
     exclude = ('author',)
      
     def icon(self, obj):
-        return '<img src="%s" />' % obj.icon_path()
+        return '<img width="100" src="%s" />' % obj.icon_path()
     icon.short_description = u'Ikona'
     icon.allow_tags = True
 
