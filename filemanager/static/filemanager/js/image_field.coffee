@@ -32,7 +32,7 @@ removeClicked = (e) ->
 
 insertClicked = (evt) ->
     href = POPUP_ADDR
-    if REPLACE_IN_POPUP_ADDR
+    if REPLACE_IN_POPUP_ADDR?
         href = href.replace "??", REPLACE_IN_POPUP_ADDR
     
     FBWindow = window.open(href,
