@@ -13,7 +13,7 @@ from seautils.utils import compile_js
 
 class FileAdmin(BaseModelAdmin):
     class Media:
-        js = compile_js(['filemanager/js/admin_list.js'])
+        js = compile_js(['filemanager/js/admin_list.coffee'])
 
     date_hierarchy = ('create_time')
     list_display = ('icon', 'static_file', 'category', 'create_time', 'file_ext')
