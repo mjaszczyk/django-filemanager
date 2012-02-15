@@ -24,7 +24,6 @@ class ImageWidget(Widget):
 
     def __init__(self, *args, **kwargs):
         self.popup_addr = kwargs.pop('popup_addr', self.DEFAULT_POPUP_ADDR)
-        print args, kwargs
         super(ImageWidget, self).__init__(*args, **kwargs)
             
     def render(self, name, value, attrs=None):
