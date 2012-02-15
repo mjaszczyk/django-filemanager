@@ -3,7 +3,14 @@
     #add_id_photo {display: none;}
 </style>
 <script type="text/javascript">
-    var POPUP_ADDR = '{{ popup_addr }}';
+    var POPUP_ADDR_BASE = '{{ popup_addr_base }}';
+    var POPUP_ADDR = ''
+    try {
+        POPUP_ADDR = get_filemanager_popup_addr(POPUP_ADDR_BASE);
+    } catch(err)
+    {
+        POPUP_ADDR = '{{ popup_addr }}';
+    }
 </script>
 <input {{flat_attrs|safe}} value="{{ value }}" />
 

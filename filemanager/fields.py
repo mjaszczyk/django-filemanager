@@ -15,13 +15,16 @@ from .models import StaticFile
 from seautils.utils import compile_js
 
 class ImageWidget(Widget):
-    DEFAULT_POPUP_ADDR = '/filemanager/staticfile/popuplist/image/'
+    POPUP_ADDR_BASE = '/staticfile/popuplist/image/'
+    POPUP_ADDR_PREFIX = '/filemanager'
+    DEFAULT_POPUP_ADDR = '%s%s' % (POPUP_ADDR_PREFIX, POPUP_ADDR_BASE)
 
     class Media:
         js = compile_js(['filemanager/js/image_field.coffee', ])
 
     def __init__(self, *args, **kwargs):
         self.popup_addr = kwargs.pop('popup_addr', self.DEFAULT_POPUP_ADDR)
+        print args, kwargs
         super(ImageWidget, self).__init__(*args, **kwargs)
             
     def render(self, name, value, attrs=None):
@@ -46,7 +49,8 @@ class ImageWidget(Widget):
             'media': media,
             'what': 'image',
             'STATIC_URL': settings.STATIC_URL,
-            'popup_addr': self.popup_addr
+            'popup_addr': self.popup_addr,
+            'popup_addr_base': self.POPUP_ADDR_BASE
         })
 
 class ImageFormField(ModelChoiceField):

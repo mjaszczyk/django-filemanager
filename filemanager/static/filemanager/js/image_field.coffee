@@ -31,7 +31,7 @@ removeClicked = (e) ->
 	$(this).fadeOut(100)
 
 insertClicked = (evt) ->
-    href = POPUP_ADDR
+    href = window.POPUP_ADDR
     if REPLACE_IN_POPUP_ADDR?
         href = href.replace "??", REPLACE_IN_POPUP_ADDR
     
