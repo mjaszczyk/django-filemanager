@@ -52,7 +52,7 @@ def serve_img(request, file_id, params):
     except ValueError:
         raise Http404('Invalid params')
     try:
-        size = AVAILABLE_SIZES[size_index]
+        size = AVAILABLE_SIZES[size_index - 1]
     except IndexError:
         raise Http404('Invalid size.')
     
