@@ -10,8 +10,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
-
-from PIL import Image
+from django.core.urlresolvers import reverse
 
 from .settings import ICONS_PATH_FORMAT_STR, AVAILABLE_ICONS, IMAGE_ICON_NAME, IMAGE_ICONS
 
@@ -66,6 +65,9 @@ class StaticFile(models.Model):
         verbose_name = u"Plik"
         verbose_name_plural = u"Pliki"
     
+    def __unicode__(self):
+        return "%s - %s" % (unicode(self.static_file), self.filename)
+
     def file_ext(self):
         try:
             return self.filename.split('.')[-1].lower()
@@ -73,6 +75,14 @@ class StaticFile(models.Model):
             return ''
     file_ext.short_description = "Rozszerzenie pliku"
     
+
+    def image_path(self, size, crop=None):
+        params = str(size)
+        if crop:
+            params += ',%s' % crop
+        return reverse('filemanager.serve_img', kwargs={'file_id': self.id,
+            'params': params})
+
     def url(self):
         return self.static_file.storage.url(str(self.static_file))
 
@@ -100,13 +110,3 @@ class StaticFile(models.Model):
     def file_path(self):
         return '%s/%s' % (settings.MEDIA_ROOT, self.static_file.name.split("/")[-1])
     
-    def __unicode__(self):
-        return "%s - %s" % (unicode(self.static_file), self.filename)
-
-    def resized_content(self):
-        _filter = getattr(Image, self.resize_args['filter'])
-        size = (int(self.resize_args['new_w']), int(self.resize_args['new_h']))
-        img = Image.open(self.image)
-        new_image = img.resize(size, _filter)
-        new_name = self.storage.get_available_name(self.args['file'])
-        new_image.save(self.storage.path(new_name))
