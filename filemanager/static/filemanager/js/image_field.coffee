@@ -40,7 +40,7 @@ insertClicked = (evt) ->
     'height=600,width=960,resizable=yes,scrollbars=yes')
     inputToInsertTo = jQ(this).parent().find("input").attr("id")
     FBWindow.focus()
-    lastAction = insertToSingleInputImage
+    window.lastAction = insertToSingleInputImage
     evt.preventDefault()
 
 window.insertSingleImage = (id, name, addr, window) ->
