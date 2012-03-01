@@ -13,11 +13,25 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from .settings import ICONS_PATH_FORMAT_STR, AVAILABLE_ICONS, IMAGE_ICON_NAME, IMAGE_ICONS
+import math
 
 
 def generate_file_path(instance, filename):
-    filename_dict = {'filename': filename}
-    filename = filename_dict['filename']
+    
+    # Get last ID
+    filename_id = StaticFile.objects.values_list('id', flat=True).order_by('-id')[0]
+    
+    filename_ext = filename.split('.')[-1].lower()
+    
+    container_id = int(math.ceil(float(filename_id) / 1000) * 1000)
+    
+#    print filename_id
+#    print container_id
+#    
+    filename = str(container_id)+ '/' + str(filename_id) + '.' + filename_ext
+    
+    #filename_dict = {'filename': filename}
+    #filename = filename_dict['filename']
     
     return filename
 
