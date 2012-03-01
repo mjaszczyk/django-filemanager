@@ -15,6 +15,8 @@ from .forms import StaticFileForm
 from .img import ThumbnailBackend
 from .settings import AVAILABLE_SIZES
 
+from . import settings
+
 file_uploaded = Signal(providing_args=["signal_key", "static_file_instance"])
 
 def upload_file(request, signal_key):
@@ -74,6 +76,6 @@ def serve_img(request, file_id, params):
     mimetype, encoding = mimetypes.guess_type(static_file.filename)
     mimetype = mimetype or 'application/octet-stream'
     response = HttpResponse()
-    ni.save(response, 'JPEG')
+    ni.save(response, 'JPEG', quality=settings.THUMBNAIL_QUALITY)
     response['Content-Type'] = '%s; charset=utf-8' % (mimetype)
     return response

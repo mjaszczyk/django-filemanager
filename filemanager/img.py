@@ -77,8 +77,13 @@ def parse_crop(crop, xy_image, xy_window):
         'center': '50%',
         'bottom': '100%',
     }
+    
+    
+    
     xy_crop = crop.split(' ')
+    
     if len(xy_crop) == 1:
+        
         if crop in x_alias_percent:
             x_crop = x_alias_percent[crop]
             y_crop = '50%'
