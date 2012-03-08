@@ -1,14 +1,10 @@
-try
-	jQ = django.jQuery
-catch err
-	jQ = $
-
+jQ = django.jQuery
 jQ(document).ready ->
-	jQ(".insert-button").click(insertButtonClicked)
-	if (jQ("#result_list").find("button").length > 0)
-		jQ("th a, td a").click (e) ->
+    jQ(".insert-button").click insertButtonClicked
+    if jQ("#result_list").find("button").length > 0
+        jQ("th a, td a").click (e) ->
             e.preventDefault()
-			jQ(this).parents('tr').find("button.insert-button").click()
+            jQ(this).parents('tr').find("button.insert-button").click()
 
 insertButtonClicked = (evt) ->
     evt.preventDefault()
