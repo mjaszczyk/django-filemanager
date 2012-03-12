@@ -80,4 +80,5 @@ def serve_img(request, file_id, params):
     response = HttpResponse()
     ni.save(response, 'JPEG', quality=settings.THUMBNAIL_QUALITY)
     response['Content-Type'] = '%s; charset=utf-8' % (mimetype)
+    response['Content-Length'] = '%s' % len(ni)
     return response
