@@ -16,6 +16,7 @@ from .img import ThumbnailBackend
 from .settings import AVAILABLE_SIZES
 
 from . import settings
+from seautils.views.decorators import expire_in
 
 file_uploaded = Signal(providing_args=["signal_key", "static_file_instance"])
 
@@ -42,6 +43,7 @@ def upload_file(request, signal_key):
         else:
             return HttpResponseRedirect(reverse('plupload_sample.upload.views.upload_file'))
 
+@expire_in()
 def serve_img(request, file_id, params):
     """
     Params:
