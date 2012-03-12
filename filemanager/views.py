@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import mimetypes
 
 from django.http import Http404
-from django.conf import settings
+from django.conf import settings as global_settings
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.dispatch.dispatcher import Signal
@@ -26,7 +26,7 @@ def upload_file(request, signal_key):
     files['static_file'] = request.FILES['file']
     form_data = {'author': request.user,
             'category': FileCategory.objects.get_or_create(
-                name=settings.CAREGIVERS_FILE_CATEGORY_NAME)[0],
+                name=global_settings.CAREGIVERS_FILE_CATEGORY_NAME)[0],
             'filename': files['static_file'].name,
             'description': ' ' }
     form = StaticFileForm(form_data, files)
