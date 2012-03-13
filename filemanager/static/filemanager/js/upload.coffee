@@ -6,7 +6,7 @@ window.init_plupload = (url, success_url) ->
             runtimes : 'html5,gears,flash,silverlight',
             url : url,
             max_file_size : '10mb',
-            chunk_size : '1mb',
+            chunk_size : '10mb',
             unique_names : true,
             flash_swf_url : "#{STATIC_URL}js/plupload/plupload.flash.swf",
             silverlight_xap_url : "#{STATIC_URL}js/plupload/plupload.silverlight.xap",
@@ -28,7 +28,7 @@ window.init_plupload = (url, success_url) ->
             up.refresh()
 
         uploader.bind 'UploadProgress', (up, file) ->
-            $('#' + file.id + " b").html(file.percent + "%")
+            $('.progress').html(file.percent + "%")
 
         uploader.bind 'Error', (up, err) ->
             $('#filelist').append("<div>Error: " + err.code +
