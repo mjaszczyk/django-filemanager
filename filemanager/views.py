@@ -43,7 +43,7 @@ def upload_file(request, signal_key):
         else:
             return HttpResponseRedirect(reverse('plupload_sample.upload.views.upload_file'))
 
-@expire_in()
+@expire_in(seconds=settings.THUMBNAIL_EXPIRES)
 def serve_img(request, file_id, params):
     """
     Params:
