@@ -122,5 +122,5 @@ class StaticFile(models.Model):
 
     @property
     def file_path(self):
-        return '%s/%s' % (settings.MEDIA_ROOT, self.static_file.name.split("/")[-1])
+        return '/'.join([settings.MEDIA_ROOT] + self.static_file.name.split("/")[-2:])
     
