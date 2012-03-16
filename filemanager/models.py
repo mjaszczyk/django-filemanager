@@ -110,7 +110,7 @@ class StaticFile(models.Model):
         if ext in AVAILABLE_ICONS:
             return ICONS_PATH_FORMAT_STR % ext
         elif ext in IMAGE_ICONS:
-            return reverse('filemanager.serve_img', kwargs={'file_id': self.id, 'params': '2'})
+            return reverse('filemanager.serve_img', kwargs={'file_id': self.id, 'params': '1'})
             return self.url()
         else:
             return ''
