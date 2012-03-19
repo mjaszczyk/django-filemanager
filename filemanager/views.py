@@ -78,6 +78,6 @@ def serve_img(request, file_id, params):
     mimetype, encoding = mimetypes.guess_type(static_file.filename)
     mimetype = mimetype or 'application/octet-stream'
     response = HttpResponse()
-    ni.save(response, 'JPEG', quality=settings.THUMBNAIL_QUALITY)
+    ni.save(response, 'PNG', quality=settings.THUMBNAIL_QUALITY)
     response['Content-Type'] = '%s; charset=utf-8' % (mimetype)
     return response
