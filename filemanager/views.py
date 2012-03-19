@@ -17,6 +17,7 @@ from .settings import AVAILABLE_SIZES
 
 from . import settings
 from seautils.views.decorators import expire_in
+import posixpath
 
 file_uploaded = Signal(providing_args=["signal_key", "static_file_instance"])
 
@@ -77,7 +78,15 @@ def serve_img(request, file_id, params):
 
     mimetype, encoding = mimetypes.guess_type(static_file.filename)
     mimetype = mimetype or 'application/octet-stream'
+
+    base, ext = posixpath.splitext(static_file.filename)
+    
+    image_format = 'JPEG'
+    ext = ext.lower()
+    if ext == 'png':
+        image_format = 'PNG'
+    
     response = HttpResponse()
-    ni.save(response, 'PNG', quality=settings.THUMBNAIL_QUALITY)
+    ni.save(response, image_format, quality=settings.THUMBNAIL_QUALITY)
     response['Content-Type'] = '%s; charset=utf-8' % (mimetype)
     return response
