@@ -17,7 +17,6 @@ from .settings import AVAILABLE_SIZES
 
 from . import settings
 from seautils.views.decorators import expire_in
-import posixpath
 
 file_uploaded = Signal(providing_args=["signal_key", "static_file_instance"])
 
@@ -45,7 +44,7 @@ def upload_file(request, signal_key):
             return HttpResponseRedirect(reverse('plupload_sample.upload.views.upload_file'))
 
 @expire_in(seconds=settings.THUMBNAIL_EXPIRES)
-def serve_img(request, file_id, params):
+def serve_img(request, file_id, params, ext):
     """
     Params:
     size_index
@@ -79,8 +78,6 @@ def serve_img(request, file_id, params):
     mimetype, encoding = mimetypes.guess_type(static_file.filename)
     mimetype = mimetype or 'application/octet-stream'
 
-    base, ext = posixpath.splitext(static_file.filename)
-    
     image_format = 'JPEG'
     ext = ext.lower()
     if ext == 'png':
