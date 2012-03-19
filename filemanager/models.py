@@ -95,7 +95,7 @@ class StaticFile(models.Model):
         if crop:
             params += ',%s' % crop
         return reverse('filemanager.serve_img', kwargs={'file_id': self.id,
-            'params': params})
+            'params': params, 'ext': self.file_ext()})
 
     def url(self):
         return self.static_file.storage.url(str(self.static_file))
@@ -110,8 +110,9 @@ class StaticFile(models.Model):
         if ext in AVAILABLE_ICONS:
             return ICONS_PATH_FORMAT_STR % ext
         elif ext in IMAGE_ICONS:
+            return reverse('filemanager.serve_img', kwargs={'file_id': self.id, 
+                'params': '1', 'ext': self.file_ext()})
             return self.url()
-            return ICONS_PATH_FORMAT_STR % IMAGE_ICON_NAME
         else:
             return ''
 

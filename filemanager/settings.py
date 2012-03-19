@@ -54,3 +54,5 @@ AVAILABLE_SIZES = getattr(settings, 'IMG_AVAILABLE_SIZES', (
     (300, 100),
 )
 )
+
+THUMBNAIL_EXPIRES = getattr(settings, 'IMG_THUMBNAIL_EXPIRES', 604800)
